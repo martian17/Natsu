@@ -3,7 +3,6 @@ def check(m):
 
 try:
     msg = await self.bot.wait_for(event='message', check=check, timeout=86400)
-    flag = True
     while True:
         if msg.content in yes:
             information.update_one({"owner": ctx.author.id}, {"$push": {"members": member.id}})
@@ -16,7 +15,6 @@ try:
             await member.send(embed=embed3)
             embed3.description = f"{member.mention} has accepted your invitation to join the clan: {data['name']}."
             await ctx.author.send(embed=embed3, mention_author=False)
-            flag = True
             break
 
         elif msg.content in no:
@@ -28,13 +26,11 @@ try:
             await member.send(embed=embed3)
             embed3.description = f"{member.mention} has declined your invitation to join the clan: {data['name']}"
             await ctx.reply(embed=embed3, mention_author=False)
-            flag = True
             break
 
-        elif flag == True:
-            await member.send("That is not a valid response. Please send either `accept` or `decline`.")
-            flag = False
         else:
+            await member.send("That is not a valid response. Please send either `accept` or `decline`.")
+            msg = await self.bot.wait_for(event='message', check=check, timeout=86400)
             continue
 
 except asyncio.TimeoutError:
